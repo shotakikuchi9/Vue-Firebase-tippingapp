@@ -4,13 +4,13 @@
   <h1>新規登録画面</h1>
   <br>
   <label for="user">ユーザー名</label>
-	<input type="user" id="user" v-model="userName">
+	<input type="user" id="user" v-model="userName" placeholder="userName">
   <br>
   <label for="email">メールアドレス</label>
-	<input type="text" id="email" v-model="email">
+	<input type="text" id="email" v-model="email" placeholder="E-mail">
   <br>
 	<label for="password">パスワード</label>
-	<input type="password" id="password" v-model="password">
+	<input type="password" id="password" v-model="password" placeholder="Password">
   <br><br>
 	<button @click="register">新規登録</button>
 	<br>

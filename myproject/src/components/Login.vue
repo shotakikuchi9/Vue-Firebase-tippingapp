@@ -4,10 +4,10 @@
   <h1>ログイン画面</h1>
   <br>
 	<label for="mail">メールアドレス</label>
-	<input type="text" id="mail">
+	<input type="text" id="mail" placeholder="E-mail">
 	<br>
 	<label for="password">パスワード</label>
-	<input type="password" id="password">
+	<input type="password" id="password" placeholder="Password">
 	<br><br>
 	<button>新規登録</button>
 	<br>
