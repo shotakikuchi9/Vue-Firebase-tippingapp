@@ -21,12 +21,12 @@ export default {
 </script>
 <style scoped>
 .container {
- margin-left: 600px;
+  margin-left: 600px;
 }
 input {
-width: 140px;
-float: right;
-margin-right: 560px;
+  width: 140px;
+  float: right;
+  margin-right: 560px;
 }
 button {
 	margin-left: 40px;

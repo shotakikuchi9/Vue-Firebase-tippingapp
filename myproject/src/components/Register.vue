@@ -4,17 +4,17 @@
   <h1>新規登録画面</h1>
   <br>
   <label for="user">ユーザー名</label>
-	<input type="user" id="user" v-model="userName" placeholder="userName">
+  <input type="user" id="user" v-model="userName" placeholder="userName">
   <br>
   <label for="email">メールアドレス</label>
-	<input type="text" id="email" v-model="email" placeholder="E-mail">
+  <input type="text" id="email" v-model="email" placeholder="E-mail">
   <br>
-	<label for="password">パスワード</label>
-	<input type="password" id="password" v-model="password" placeholder="Password">
+  <label for="password">パスワード</label>
+  <input type="password" id="password" v-model="password" placeholder="Password">
   <br><br>
-	<button @click="register">新規登録</button>
-	<br>
-	<router-link to="./">ログインはこちらから</router-link>
+  <button @click="register">新規登録</button>
+  <br>
+  <router-link to="./">ログインはこちらから</router-link>
 </div>
 </template>
 <script>
@@ -49,12 +49,12 @@ export default {
 </script>
 <style scoped>
 .container {
- margin-left: 600px;
+  margin-left: 600px;
 }
 input {
-width: 140px;
-float: right;
-margin-right: 560px;
+  width: 140px;
+  float: right;
+  margin-right: 560px;
 }
 button {
 	margin-left: 40px;
