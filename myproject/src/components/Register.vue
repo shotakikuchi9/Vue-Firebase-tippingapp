@@ -18,7 +18,8 @@
 </div>
 </template>
 <script>
-import axios from 'axios'
+import firebase from 'firebase/app'
+import "firebase/auth";
 export default {
   data() {
     return {
@@ -29,15 +30,12 @@ export default {
   },
   methods: {
     register() {
-      axios.post(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAefVUnk7Ie_rchCMkHBVlhn_wcyfdHKlc',
-        {
-          email: this.email,
-          password: this.password,
-          returnSecureToken: true
-        }
-      ).then(response => {
-        console.log(response);
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password) 
+      .then(() => {
+        console.log('register');
+      })
+      .catch(error => {
+        console.log(error);
       })
       this.userName = '';
       this.email = '';
