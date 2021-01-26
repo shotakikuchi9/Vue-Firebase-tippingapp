@@ -41,8 +41,7 @@ export default {
       this.email = '';
       this.password = '';
     }
-  }
-  
+  }  
 }
 </script>
 <style scoped>
