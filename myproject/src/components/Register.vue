@@ -20,6 +20,7 @@
 <script>
 import firebase from 'firebase/app'
 import "firebase/auth";
+import 'firebase/firestore';
 export default {
   data() {
     return {
@@ -32,14 +33,27 @@ export default {
     register() {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password) 
       .then(() => {
-        console.log('register');
+        firebase.auth().currentUser.updateProfile({
+          displayName: this.userName
+        }).then(() =>{
+          this.$router.push('/dashboard')
+        }).catch((error) => {
+          console.log(error);
+        })
+        const db = firebase.firestore()
+        const data = {
+          name: this.userName,
+          wallet: 500
+        }
+        db.collection('users').doc(this.userName).set(data);
       })
       .catch(error => {
         console.log(error);
+        this.userName = '';
+        this.email = '';
+        this.password = '';
       })
-      this.userName = '';
-      this.email = '';
-      this.password = '';
+  
     }
   }  
 }
@@ -56,5 +70,4 @@ input {
 button {
   margin-left: 40px;
 }
-
 </style>
