@@ -18,7 +18,7 @@
 </div>
 </template>
 <script>
-import firebase from 'firebase/app'
+import firebase from 'firebase/app';
 import "firebase/auth";
 import 'firebase/firestore';
 export default {
@@ -41,11 +41,9 @@ export default {
           console.log(error);
         })
         const db = firebase.firestore()
-        const data = {
-          name: this.userName,
-          wallet: 500
-        }
-        db.collection('users').doc(this.userName).set(data);
+        this.$store.commit('setUserName', this.userName);
+        this.$store.commit('setWallet', 500)
+        db.collection('users').doc(this.userName).set(this.$store.getters);
       })
       .catch(error => {
         console.log(error);
@@ -53,7 +51,6 @@ export default {
         this.email = '';
         this.password = '';
       })
-  
     }
   }  
 }

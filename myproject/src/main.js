@@ -1,28 +1,16 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import store from './store'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import { config } from './firebase.config'
 
-Vue.config.productionTip = false
-
-const config = {
-  apiKey: "AIzaSyAefVUnk7Ie_rchCMkHBVlhn_wcyfdHKlc",
-  authDomain: "vue4-ed40b.firebaseapp.com",
-  projectId: "vue4-ed40b",
-  storageBucket: "vue4-ed40b.appspot.com",
-  messagingSenderId: "464933463808",
-  appId: "1:464933463808:web:6d1e290cf7a740d4d0f5e5"
-}
-const admin = require('firebase-admin');
-admin.initializeApp();
 firebase.initializeApp(config);
-firebase.firestore()
-
-export default firebase;
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')

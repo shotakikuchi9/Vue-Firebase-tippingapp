@@ -28,8 +28,19 @@ export default {
     login() {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
       .then(() => {
-        console.log('login');
-        this.$router.push('/dashboard')
+        this.$store.commit('setUserName', firebase.auth().currentUser.displayName)
+        const db = firebase.firestore();
+        const walletRef = db.collection('users').doc(this.$store.getters.userName);
+        let vc = this
+        walletRef
+        .get()
+        .then(function(doc) {
+          vc.$store.commit('setWallet', doc.data().wallet);
+        }) 
+        .catch((error) => {
+          console.log(error);
+        })
+        this.$router.push('/dashboard');
       })
       .catch( error => { 
         console.log(error);
