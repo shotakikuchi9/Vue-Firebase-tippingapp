@@ -15,8 +15,6 @@
 </div>
 </template>
 <script>
-import firebase from 'firebase/app'
-import "firebase/auth";
 export default {
   data() {
     return {
@@ -26,31 +24,9 @@ export default {
   },
   methods: {
     login() {
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-      .then(() => {
-        this.$store.commit('setUserName', firebase.auth().currentUser.displayName)
-        const db = firebase.firestore();
-        const walletRef = db.collection('users').doc(this.$store.getters.userName);
-        let vc = this
-        walletRef
-        .get()
-        .then(function(doc) {
-          vc.$store.commit('setWallet', doc.data().wallet);
-        }) 
-        .catch((error) => {
-          console.log(error);
-        })
-        this.$router.push('/dashboard');
-      })
-      .catch( error => { 
-        console.log(error);
-      })
-      this.email = '';
-      this.password = '';
+      this.$store.dispatch('login', {email: this.email, password: this.password})
     }
-
   }
-  
 }
 </script>
 <style scoped>
