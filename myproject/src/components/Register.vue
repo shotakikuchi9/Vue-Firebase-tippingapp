@@ -18,8 +18,6 @@
 </div>
 </template>
 <script>
-import firebase from 'firebase/app'
-import "firebase/auth";
 export default {
   data() {
     return {
@@ -30,16 +28,7 @@ export default {
   },
   methods: {
     register() {
-      firebase.auth().createUserWithEmailAndPassword(this.email, this.password) 
-      .then(() => {
-        console.log('register');
-      })
-      .catch(error => {
-        console.log(error);
-      })
-      this.userName = '';
-      this.email = '';
-      this.password = '';
+      this.$store.dispatch('register', {userName: this.userName, email: this.email, password: this.password})
     }
   }  
 }
@@ -56,5 +45,4 @@ input {
 button {
   margin-left: 40px;
 }
-
 </style>

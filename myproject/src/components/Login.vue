@@ -15,8 +15,6 @@
 </div>
 </template>
 <script>
-import firebase from 'firebase/app'
-import "firebase/auth";
 export default {
   data() {
     return {
@@ -26,19 +24,9 @@ export default {
   },
   methods: {
     login() {
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-      .then(() => {
-        console.log('login');
-      })
-      .catch( error => { 
-        console.log(error);
-      })
-      this.email = '';
-      this.password = '';
+      this.$store.dispatch('login', {email: this.email, password: this.password})
     }
-
   }
-  
 }
 </script>
 <style scoped>
