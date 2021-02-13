@@ -1,6 +1,6 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import firebase from 'firebase';
+import Vue from 'vue'
+import Vuex from 'vuex'
+import firebase from 'firebase'
 import 'firebase/auth'
 import 'firebase/firestore'
 import Router from './router'
@@ -10,7 +10,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userName: '',
-    wallet: ''
+    wallet: '',
+    status: false
   },
   getters: {
     userName(state) {
@@ -18,6 +19,9 @@ export default new Vuex.Store({
     },
     wallet(state) {
       return state.wallet
+    },
+    status(state) {
+      return state.status
     }
   },
   mutations: {
@@ -26,6 +30,9 @@ export default new Vuex.Store({
     },
     setWallet(state, wallet) {
       state.wallet = wallet
+    },
+    changeStatus(state, status) {
+      state.status = status
     }
   },
   actions: {
@@ -56,8 +63,8 @@ export default new Vuex.Store({
       .then(() => {
         firebase.auth().currentUser.updateProfile({
         displayName: userName
-        }).then(() =>{
-          Router.push('/dashboard')
+        }).then(() => {
+          Router.push('/dashboard');
         }).catch((error) => {
           console.log(error);
         })
@@ -71,6 +78,24 @@ export default new Vuex.Store({
         userName = '';
         email = '';
         password = '';
+      })
+    },
+    logout() {
+      firebase.auth().signOut()
+      .then(() => {
+        Router.push('/');
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    },
+    onAuth( { commit }) {
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          commit('changeStatus', true)
+        } else {
+          commit('changeStatus', false)
+        }
       })
     }
   }
