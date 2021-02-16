@@ -11,7 +11,8 @@ export default new Vuex.Store({
   state: {
     userName: '',
     wallet: '',
-    status: false
+    status: false,
+    email: '',
   },
   getters: {
     userName(state) {
@@ -22,6 +23,9 @@ export default new Vuex.Store({
     },
     status(state) {
       return state.status
+    },
+    email(state) {
+      return state.email
     }
   },
   mutations: {
@@ -33,6 +37,9 @@ export default new Vuex.Store({
     },
     changeStatus(state, status) {
       state.status = status
+    },
+    setEmail(state, email) {
+      state.email = email
     }
   },
   actions: {
@@ -71,6 +78,7 @@ export default new Vuex.Store({
         const db = firebase.firestore()
         commit('setUserName', userName);
         commit('setWallet', 500);
+        commit('setEmail', email)
         db.collection('users').doc(userName).set(getters);
       })
       .catch(error => {
@@ -89,7 +97,7 @@ export default new Vuex.Store({
         console.log(error);
       })
     },
-    onAuth( { commit }) {
+    onAuth({ commit }) {
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           commit('changeStatus', true)
