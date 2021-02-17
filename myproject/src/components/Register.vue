@@ -39,9 +39,9 @@ export default {
 .container {
   margin-left: 600px;
 }
-input {
-  width: 140px;
-  float: right;
-  margin-right: 560px;
+label {
+  margin-right: 10px;
+  width: 120px;
+  float: left;
 }
 </style>

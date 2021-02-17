@@ -28,8 +28,8 @@
   <v-dialog v-model="dialog" max-width="230">
     <v-card>
       <v-card-title>
-        {{ otherUser }}さんの残高<br>
-        <p>{{ otherUserWallet}}</p>
+        {{ otherUser }}さんの残高<br><br>
+        {{ otherUserWallet}}
       </v-card-title>
       <v-card-actions>
         <v-btn @click="dialog=false" color="error">close</v-btn>
@@ -39,9 +39,6 @@
 </v-app>
 </template>
 <script>
-import firebase from 'firebase'
-import 'firebase/auth'
-import 'firebase/firestore'
 export default {
   data() {
     return {
@@ -65,14 +62,9 @@ export default {
     },
     openDialog(user) {
       this.dialog = true
-      this.otherUser = user;
-      const db = firebase.firestore();
-      const userWalletRef = db.collection('users').doc(this.otherUser)
-      userWalletRef
-      .get()
-      .then(doc => {
-        this.otherUserWallet = doc.data().wallet
-      })
+      this.$store.dispatch('getUserWallet', user)
+      this.otherUser = user
+      this.otherUserWallet = this.$store.getters.otherUserWallet
     }
   },
   mounted() {
@@ -80,18 +72,8 @@ export default {
     if (!this.$store.getters.status) {
       this.$router.push('/')
     }
-    this.otherUsers = [];
-    const currentUserEmail = firebase.auth().currentUser.email
-    const db = firebase.firestore();
-    const usersRef = db.collection('users')
-    usersRef
-    .where('email', '!=', currentUserEmail)
-    .get()
-    .then(users => {
-      users.forEach(user => {
-        this.otherUsers.push(user.id)
-      })
-    })
+    this.$store.dispatch('getOtherUsers')
+    this.otherUsers = this.$store.getters.otherUsers
   }
 }
 </script>
@@ -117,6 +99,5 @@ table {
 .td {
   text-align: center;
   width: 160px;
-
 }
 </style>

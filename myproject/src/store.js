@@ -13,6 +13,8 @@ export default new Vuex.Store({
     wallet: '',
     status: false,
     email: '',
+    otherUserWallet: '',
+    otherUsers: []
   },
   getters: {
     userName(state) {
@@ -26,6 +28,12 @@ export default new Vuex.Store({
     },
     email(state) {
       return state.email
+    },
+    otherUserWallet(state) {
+      return state.otherUserWallet
+    },
+    otherUsers(state) {
+      return state.otherUsers
     }
   },
   mutations: {
@@ -40,6 +48,15 @@ export default new Vuex.Store({
     },
     setEmail(state, email) {
       state.email = email
+    },
+    setOtherUserWallet(state, otherUserWallet) {
+      state.otherUserWallet = otherUserWallet
+    },
+    setOtherUsers(state, otherUser) {
+      state.otherUsers.push(otherUser)
+    },
+    resetOtherUsers(state) {
+      state.otherUsers = [];
     }
   },
   actions: {
@@ -105,6 +122,30 @@ export default new Vuex.Store({
           commit('changeStatus', false)
         }
       })
+    },
+    getUserWallet({ commit }, otherUser) {
+      const db = firebase.firestore();
+      const userWalletRef = db.collection('users').doc(otherUser)
+      userWalletRef
+      .get()
+      .then(doc => {
+        const otherUserWallet = doc.data().wallet
+        commit('setOtherUserWallet', otherUserWallet);
+      })
+    },
+    getOtherUsers({ commit}) {
+      const currentUserEmail = firebase.auth().currentUser.email
+      const db = firebase.firestore()
+      const usersRef = db.collection('users')
+      commit('resetOtherUsers')
+      usersRef
+      .where('email', '!=', currentUserEmail)
+      .get()
+      .then(users => {
+        users.forEach(user => {
+        commit('setOtherUsers', user.id)
+      })
+    })
     }
   }
 });
