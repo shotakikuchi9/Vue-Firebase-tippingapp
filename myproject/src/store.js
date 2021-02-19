@@ -11,7 +11,10 @@ export default new Vuex.Store({
   state: {
     userName: '',
     wallet: '',
-    status: false
+    status: false,
+    email: '',
+    otherUserWallet: '',
+    otherUsers: []
   },
   getters: {
     userName(state) {
@@ -22,6 +25,15 @@ export default new Vuex.Store({
     },
     status(state) {
       return state.status
+    },
+    email(state) {
+      return state.email
+    },
+    otherUserWallet(state) {
+      return state.otherUserWallet
+    },
+    otherUsers(state) {
+      return state.otherUsers
     }
   },
   mutations: {
@@ -33,6 +45,18 @@ export default new Vuex.Store({
     },
     changeStatus(state, status) {
       state.status = status
+    },
+    setEmail(state, email) {
+      state.email = email
+    },
+    setOtherUserWallet(state, otherUserWallet) {
+      state.otherUserWallet = otherUserWallet
+    },
+    setOtherUsers(state, otherUser) {
+      state.otherUsers.push(otherUser)
+    },
+    resetOtherUsers(state) {
+      state.otherUsers = [];
     }
   },
   actions: {
@@ -71,6 +95,7 @@ export default new Vuex.Store({
         const db = firebase.firestore()
         commit('setUserName', userName);
         commit('setWallet', 500);
+        commit('setEmail', email)
         db.collection('users').doc(userName).set(getters);
       })
       .catch(error => {
@@ -89,7 +114,7 @@ export default new Vuex.Store({
         console.log(error);
       })
     },
-    onAuth( { commit }) {
+    onAuth({ commit }) {
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           commit('changeStatus', true)
@@ -97,6 +122,30 @@ export default new Vuex.Store({
           commit('changeStatus', false)
         }
       })
+    },
+    getUserWallet({ commit }, otherUser) {
+      const db = firebase.firestore();
+      const userWalletRef = db.collection('users').doc(otherUser)
+      userWalletRef
+      .get()
+      .then(doc => {
+        const otherUserWallet = doc.data().wallet
+        commit('setOtherUserWallet', otherUserWallet);
+      })
+    },
+    getOtherUsers({ commit}) {
+      const currentUserEmail = firebase.auth().currentUser.email
+      const db = firebase.firestore()
+      const usersRef = db.collection('users')
+      commit('resetOtherUsers')
+      usersRef
+      .where('email', '!=', currentUserEmail)
+      .get()
+      .then(users => {
+        users.forEach(user => {
+        commit('setOtherUsers', user.id)
+      })
+    })
     }
   }
 });
