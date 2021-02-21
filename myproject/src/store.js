@@ -148,25 +148,27 @@ export default new Vuex.Store({
         })
       })
     },
-    sendMoney( { commit, getters }, { amount, selectedUser }) {
+    async sendMoney( { commit, getters }, { amount, selectedUser }) {
       const db = firebase.firestore();
       const currentUserRef = db.collection('users').doc(getters.userName)
-      currentUserRef.update({
-        wallet: Number(getters.wallet) - Number(amount)
-      })
-      currentUserRef
-      .get()
-      .then(doc => {
-        commit('setWallet', doc.data().wallet)
-      })
       const selectedUserRef = db.collection('users').doc(selectedUser)
-      selectedUserRef.update({
-        wallet: Number(getters.otherUserWallet) + Number(amount)
-      })
-      selectedUserRef
-      .get()
-      .then(doc => {
-        commit('setOtherUserWallet', doc.data().wallet)
+      await db.runTransaction(() => {
+        currentUserRef.update({
+          wallet: Number(getters.wallet) - Number(amount)
+        })
+        currentUserRef
+        .get()
+        .then(doc => {
+          commit('setWallet', doc.data().wallet)
+        })
+        selectedUserRef.update({
+          wallet: Number(getters.otherUserWallet) + Number(amount)
+        })
+        selectedUserRef
+        .get()
+        .then(doc => {
+          commit('setOtherUserWallet', doc.data().wallet)
+        })
       })
     }
   }

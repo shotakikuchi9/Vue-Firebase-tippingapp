@@ -89,7 +89,6 @@ export default {
     },
     sendMoney() {
       this.sendDialog = false
-      console.log(this.selectedUser);
       this.$store.dispatch('sendMoney', { amount: this.amount,selectedUser: this.selectedUser })
       this.amount = ''
     }
