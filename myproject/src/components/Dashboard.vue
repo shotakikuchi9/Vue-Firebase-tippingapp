@@ -18,21 +18,33 @@
         <tbody v-for="otherUser in otherUsers" :key="otherUser">
           <tr>
             <td class="td">{{ otherUser }}</td>
-            <td><v-btn small color="primary" depressed @click="openDialog(otherUser)">ウォレットを見る</v-btn></td>
-            <td><v-btn small color="primary" depressed>送る</v-btn></td>
+            <td><v-btn small color="primary" depressed @click="openWalletDialog(otherUser)">ウォレットを見る</v-btn></td>
+            <td><v-btn small color="primary" depressed @click="openSendDialog(otherUser)">送る</v-btn></td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
-  <v-dialog v-model="dialog" max-width="230">
+  <v-dialog v-model="walletDialog" max-width="230">
     <v-card>
       <v-card-title>
-        {{ otherUser }}さんの残高<br><br>
-        {{ otherUserWallet}}
+        <p style="margin: auto;">{{ otherUser }}さんの残高</p><br><br>
+        <p style="margin: auto;">{{ otherUserWallet }}</p>
       </v-card-title>
       <v-card-actions>
-        <v-btn @click="dialog=false" color="error">close</v-btn>
+        <v-btn @click="walletDialog=false" color="error" style="margin: auto;">close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-dialog v-model="sendDialog" max-width="230">
+    <v-card>
+      <v-card-title>
+        <p style="margin: auto;">あなたの残高: {{ wallet }}</p><br>
+        <p style="margin: auto;">送る金額</p><br>
+        <v-text-field solo v-model="amount" type="number"></v-text-field>
+      </v-card-title>
+      <v-card-actions>
+        <v-btn @click="sendMoney" color="error" style="margin: auto;">送信</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -42,10 +54,12 @@
 export default {
   data() {
     return {
-      dialog: false,
+      walletDialog: false,
+      sendDialog: false,
       otherUser: '',
-      otherUserWallet: '',
-      otherUsers: []
+      selectedUser: '',
+      otherUsers: [],
+      amount: '',
     }
   },
   computed: {
@@ -54,19 +68,31 @@ export default {
     },
     wallet() {
       return this.$store.getters.wallet
+    },
+    otherUserWallet() {
+      return this.$store.getters.otherUserWallet
     }
   },
   methods: {
     logout() {
       this.$store.dispatch('logout');
     },
-    openDialog(user) {
-      this.dialog = true
+    openWalletDialog(user) {
       this.$store.dispatch('getUserWallet', user)
       this.otherUser = user
-      this.otherUserWallet = this.$store.getters.otherUserWallet
+      this.walletDialog = true
+    },
+    openSendDialog(user) {
+      this.sendDialog = true
+      this.$store.dispatch('getUserWallet', user)
+      this.selectedUser = user
+    },
+    sendMoney() {
+      this.sendDialog = false
+      this.$store.dispatch('sendMoney', { amount: this.amount,selectedUser: this.selectedUser })
+      this.amount = ''
     }
-  },
+  }, 
   mounted() {
     this.$store.dispatch('onAuth');
     if (!this.$store.getters.status) {

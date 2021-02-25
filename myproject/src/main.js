@@ -7,8 +7,6 @@ import 'firebase/auth'
 import 'firebase/firestore'
 import { config } from './firebase.config'
 import vuetify from './plugins/vuetify';
-const admin = require('firebase-admin');
-admin.initializeApp();
 
 firebase.initializeApp(config);
 
