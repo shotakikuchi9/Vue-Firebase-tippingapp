@@ -1,0 +1,1 @@
+Vue.jsとFirebaseを用いた投げ銭アプリです。
